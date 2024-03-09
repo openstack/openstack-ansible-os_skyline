@@ -59,7 +59,7 @@ skyline_db_setup_python_interpreter: >-
 skyline_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 skyline_galera_database: skyline
 skyline_galera_user: skyline
-skyline_galera_password: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+# skyline_galera_password:
 skyline_galera_use_ssl: "{{ galera_use_ssl | default(False) }}"
 skyline_galera_ssl_ca_cert: "{{ galera_ssl_ca_cert | default('') }}"
 skyline_galera_port: "{{ galera_port | default('3306') }}"
@@ -77,7 +77,7 @@ skyline_system_user_home: "/var/lib/{{ skyline_system_user_name }}"
 
 ## Service user
 skyline_service_user_name: skyline
-skyline_service_password: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+# skyline_service_password:
 skyline_service_project_name: service
 skyline_service_project_domain_id: default
 skyline_service_user_domain_id: default
@@ -87,9 +87,9 @@ skyline_role_name: admin
 # API
 skyline_bind_address: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
 skyline_service_port: 9999
-skyline_prometheus_basic_auth_password: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+# skyline_prometheus_basic_auth_password:
 skyline_prometheus_basic_auth_user: 'skyline'
-skyline_secret_key: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+# skyline_secret_key:
 skyline_interface: internal
 ## Cap the maximum number of threads / workers when a user value is unspecified.
 skyline_api_workers_max: 16
