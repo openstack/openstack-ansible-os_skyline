@@ -53,10 +53,10 @@
     systemd_tempd_prefix: openstack
     systemd_slice_name: skyline
     systemd_lock_path: /var/lock/skyline
-    systemd_CPUAccounting: true
-    systemd_BlockIOAccounting: true
-    systemd_MemoryAccounting: true
-    systemd_TasksAccounting: true
+    systemd_service_cpu_accounting: true
+    systemd_service_block_io_accounting: true
+    systemd_service_memory_accounting: true
+    systemd_service_tasks_accounting: true
     systemd_services:
       - service_name: "{{ service_var.service_name }}"
         enabled: yes

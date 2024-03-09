@@ -13,31 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-galaxy_info:
-  author: BBC R&D
-  description: Installation and setup of skyline
-  company: BBC R&D
-  license: Apache2
-  min_ansible_version: "2.10"
-  role_name: os_skyline
-  namespace: openstack
-  platforms:
-    - name: Debian
-      versions:
-        - bookworm
-    - name: Ubuntu
-      versions:
-        - jammy
-    - name: EL
-      versions:
-        - 9
-  galaxy_tags:
-    - cloud
-    - python
-    - skyline
-    - development
-    - openstack
-dependencies:
-  - role: apt_package_pinning
-    when:
-      - ansible_facts['pkg_mgr'] == 'apt'
+- project:
+    templates:
+      - check-requirements
+      - openstack-ansible-linters-jobs
+      - openstack-ansible-deploy-aio_metal-jobs
+      - publish-openstack-docs-pti
+      - build-release-notes-jobs-python3

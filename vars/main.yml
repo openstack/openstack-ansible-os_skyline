@@ -13,8 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-_skyline_is_first_play_host: "{{ (skyline_services['skyline-api']['group'] in group_names and inventory_hostname == (groups[skyline_services['skyline-api']['group']] | intersect(ansible_play_hosts)) | first) | bool }}"
-
+_skyline_is_first_play_host: >-
+  {{
+    (skyline_services['skyline-api']['group'] in group_names and inventory_hostname == (
+      groups[skyline_services['skyline-api']['group']] | intersect(ansible_play_hosts)) | first) | bool
+  }}
 
 skyline_package_list: |-
   {% set packages = skyline_distro_packages %}

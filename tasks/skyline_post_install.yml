@@ -31,7 +31,7 @@
     src: "gunicorn.py.j2"
     dest: "/etc/skyline/gunicorn.py"
     owner: "root"
-    group: "{{ item.group|default(skyline_system_group_name) }}"
+    group: "{{ item.group | default(skyline_system_group_name) }}"
     mode: "0640"
   notify:
     - Restart skyline services
@@ -41,7 +41,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "root"
-    group: "{{ item.group|default(skyline_system_group_name) }}"
+    group: "{{ item.group | default(skyline_system_group_name) }}"
     mode: "0640"
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
@@ -58,6 +58,8 @@
     openstack --os-cloud default endpoint list --format yaml --interface {{ skyline_interface }}
   delegate_to: "{{ skyline_service_setup_host }}"
   register: _endpoint_list
+  run_once: true
+  changed_when: false
 
 - name: Set endpoint fact
   set_fact:

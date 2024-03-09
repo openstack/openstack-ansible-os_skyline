@@ -25,7 +25,11 @@ skyline_package_state: "{{ package_state | default('latest') }}"
 # for the service setup. The host must already have
 # clouds.yaml properly configured.
 skyline_service_setup_host: "{{ openstack_service_setup_host | default('localhost') }}"
-skyline_service_setup_host_python_interpreter: "{{ openstack_service_setup_host_python_interpreter | default((skyline_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
+skyline_service_setup_host_python_interpreter: >-
+  {{
+     openstack_service_setup_host_python_interpreter | default(
+       (skyline_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable']))
+  }}
 
 skyline_git_repo: https://opendev.org/openstack/skyline-apiserver
 skyline_git_install_branch: master
@@ -33,7 +37,8 @@ skyline_git_install_branch: master
 skyline_console_git_repo: https://opendev.org/openstack/skyline-console
 skyline_console_git_install_branch: master
 
-skyline_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
+skyline_upper_constraints_url: >-
+  {{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}
 skyline_git_constraints: []
 #  - "--constraint {{ skyline_upper_constraints_url }}"
 
@@ -46,7 +51,11 @@ skyline_lib_static_files: "{{ skyline_lib_dir }}/skyline_console/static"
 
 ## Database info
 skyline_db_setup_host: "{{ openstack_db_setup_host | default('localhost') }}"
-skyline_db_setup_python_interpreter: "{{ openstack_db_setup_python_interpreter | default((skyline_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable'])) }}"
+skyline_db_setup_python_interpreter: >-
+  {{
+     openstack_db_setup_python_interpreter | default(
+       (skyline_db_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable']))
+  }}
 skyline_galera_address: "{{ galera_address | default('127.0.0.1') }}"
 skyline_galera_database: skyline
 skyline_galera_user: skyline

@@ -13,17 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: create the system group
+- name: Create the system group
   group:
     name: "{{ skyline_system_group_name }}"
-    gid: "{{ skyline_system_group_gid|default(omit) }}"
+    gid: "{{ skyline_system_group_gid | default(omit) }}"
     state: "present"
     system: "yes"
 
 - name: Create the skyline system user
   user:
     name: "{{ skyline_system_user_name }}"
-    uid: "{{ skyline_system_user_uid|default(omit) }}"
+    uid: "{{ skyline_system_user_uid | default(omit) }}"
     group: "{{ skyline_system_group_name }}"
     comment: "{{ skyline_system_comment }}"
     shell: "{{ skyline_system_shell }}"
@@ -35,9 +35,9 @@
   file:
     path: "{{ item.path }}"
     state: directory
-    owner: "{{ item.owner|default(skyline_system_user_name) }}"
-    group: "{{ item.group|default(skyline_system_group_name) }}"
-    mode: "{{ item.mode|default('0755') }}"
+    owner: "{{ item.owner | default(skyline_system_user_name) }}"
+    group: "{{ item.group | default(skyline_system_group_name) }}"
+    mode: "{{ item.mode | default('0755') }}"
   loop:
     - path: "/openstack"
       mode: "0755"
