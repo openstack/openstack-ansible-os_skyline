@@ -109,3 +109,6 @@ skyline_services:
 ## Tunable overrides
 skyline_apiserver_init_overrides: {}
 skyline_skyline_yaml_overrides: {}
+
+# Set override for image upload size
+skyline_client_max_body_size: 1100M
