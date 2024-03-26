@@ -1,0 +1,130 @@
+---
+# Copyright 2022, BBC R&D.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Add EPEL repository
+  delegate_to: "{{ skyline_console_yarn_setup_host }}"
+  when:
+    - ansible_facts['os_family'] | lower == 'redhat'
+  block:
+    - name: Download EPEL gpg keys
+      get_url:
+        url: "{{ skyline_yarn_epel_key }}"
+        dest: /etc/pki/rpm-gpg
+        mode: "0640"
+      register: _get_yum_keys
+      until: _get_yum_keys is success
+      retries: 5
+      delay: 2
+
+    - name: Install EPEL gpg keys
+      rpm_key:
+        key: "/etc/pki/rpm-gpg/{{ skyline_yarn_epel_key.split('/')[-1] }}"
+        state: present
+
+    - name: Install the EPEL repository
+      yum_repository:
+        name: epel-yarn
+        baseurl: "{{ skyline_yarn_epel_mirror ~ '/' ~ ansible_facts['distribution_major_version'] ~ '/Everything/' ~ ansible_facts['architecture'] }}"
+        description: "NodeJS Packages for Enterprise Linux {{ ansible_facts['distribution_major_version'] }} - $basearch"
+        gpgcheck: yes
+        enabled: yes
+        state: present
+        includepkgs: "yarnpkg"
+      register: install_epel_repo
+      until: install_epel_repo is success
+      retries: 5
+      delay: 2
+
+- name: Clone skyline repo to the destination
+  delegate_to: "{{ skyline_console_yarn_setup_host }}"
+  git:
+    repo: "{{ skyline_console_git_repo }}"
+    version: "{{ skyline_console_git_install_branch }}"
+    dest: "{{ skyline_console_yarn_build_path }}"
+    force: true
+  changed_when: False
+
+- name: Detect if rebuild is needed
+  delegate_to: "{{ skyline_console_yarn_setup_host }}"
+  when: not skyline_console_yarn_rebuild
+  block:
+    # NOTE(noonedeadpunk): This task may fail first time it runs (ie before python_venv_build)
+    #                      due to missing setuptools and pip. If it happens - we consider need
+    #                      of building yarn
+    - name: Get intended version to be installed
+      command: python3 setup.py --version
+      args:
+        chdir: "{{ skyline_console_yarn_build_path }}"
+      register: __skyline_console_candidate
+      changed_when: __skyline_console_candidate.rc == 1
+      failed_when: __skyline_console_candidate.rc > 1
+
+    # NOTE(noonedeadpunk): We check for wheels, as venv might have something different installed
+    #                      while wheels might be already in place.
+    - name: Check if required wheel is already present
+      uri:
+        url: >-
+          {{ openstack_repo_url | default('http://localhost') }}/os-releases/{{ openstack_release | default('master') }}/{{
+            _venv_build_dist_arch }}/wheels/skyline_console-{{ __skyline_console_candidate.stdout_lines[-1] }}-py3-none-any.whl
+        status_code: [200, 404]
+      register: __skyline_console_wheels
+      changed_when: __skyline_console_wheels.status == 404
+      when:
+        - skyline_console_wheel_build_enable
+        - __skyline_console_candidate is not changed
+
+    - name: Check if installed in the venv version matches
+      command: >-
+        {{ skyline_bin }}/{{ skyline_venv_python_executable }} -c "from importlib.metadata import version; print(version('skyline-console'))"
+      register: __skyline_console_venv
+      changed_when: __skyline_console_venv.rc in [1, 127] or __skyline_console_candidate.stdout_lines[-1] != __skyline_console_venv.stdout_lines[-1]
+      when:
+        - not skyline_console_wheel_build_enable
+        - __skyline_console_candidate is not changed
+
+- name: Define if we should re-build with yarn
+  set_fact:
+    skyline_console_yarn_rebuild: true
+  when:
+    - __skyline_console_candidate is changed or __skyline_console_wheels is changed or __skyline_console_venv is changed
+
+- name: Build static files with yarn
+  delegate_to: "{{ skyline_console_yarn_setup_host }}"
+  when: skyline_console_yarn_rebuild
+  block:
+    - name: Install yarn
+      package:
+        name: "{{ skyline_yarn_packages }}"
+        state: "{{ skyline_package_state }}"
+      register: install_packages
+      until: install_packages is success
+      retries: 5
+      delay: 2
+
+    - name: Install yarn requirements (this may take a while)
+      command: "{{ skyline_yarn_binary }} install"
+      args:
+        chdir: "{{ skyline_console_yarn_build_path }}"
+      register: install_yarn
+      until: install_yarn is success
+      retries: 3
+      delay: 2
+      changed_when: false
+
+    - name: Build skyline-console static files (this may take a while)
+      command: "{{ skyline_yarn_binary }} run build"
+      args:
+        chdir: "{{ skyline_console_yarn_build_path }}"
+      changed_when: false
