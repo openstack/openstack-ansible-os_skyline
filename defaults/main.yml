@@ -91,6 +91,10 @@ skyline_prometheus_basic_auth_password: "{{ lookup('password', '/dev/null length
 skyline_prometheus_basic_auth_user: 'skyline'
 skyline_secret_key: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
 skyline_interface: internal
+## Cap the maximum number of threads / workers when a user value is unspecified.
+skyline_api_workers_max: 16
+skyline_api_workers: >-
+  {{ [[(ansible_facts['processor_vcpus'] // ansible_facts['processor_threads_per_core']) | default(1), 1] | max, skyline_api_workers_max] | min }}
 
 # Common pip packages
 skyline_pip_packages:
