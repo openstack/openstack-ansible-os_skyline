@@ -30,7 +30,7 @@ galaxy_info:
         - jammy
     - name: EL
       versions:
-        - 9
+        - "9"
   galaxy_tags:
     - cloud
     - python
