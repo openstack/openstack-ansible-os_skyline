@@ -1,5 +1,5 @@
 ---
-# Copyright 2019, VEXXHOST, Inc.
+# Copyright 2024, Cleura AB.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,6 +23,6 @@ skyline_distro_packages:
  - nginx
 
 skyline_system_service_name: nginx
-skyline_nginx_vhost_enable_path: /etc/nginx/sites-enabled
+skyline_nginx_vhost_enable_path: /etc/nginx/conf.d
 
 skyline_devel_distro_packages: []
