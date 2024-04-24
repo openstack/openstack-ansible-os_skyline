@@ -46,6 +46,9 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-Host $host;
         proxy_set_header Host $http_host;
+{%   if 'glance' in _service %}
+        client_max_body_size {{ skyline_client_max_body_size }};
+{%  endif %}
     }
 {%  endif %}
 {% endfor %}
