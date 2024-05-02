@@ -1,0 +1,11 @@
+---
+
+- job:
+    name: openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
+    parent: openstack-ansible-deploy-aio
+    nodeset: ubuntu-jammy
+
+- job:
+    name: openstack-ansible-deploy-aio_skyline_yarn-rockylinux-9
+    parent: openstack-ansible-deploy-aio
+    nodeset: rockylinux-9

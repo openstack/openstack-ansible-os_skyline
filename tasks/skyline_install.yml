@@ -24,6 +24,13 @@
   retries: 5
   delay: 2
 
+- name: Build skyline-console with yarn
+  include_tasks:
+    file: skyline_install_yarn.yml
+  when:
+    - skyline_console_wheel_build_enable | ternary(_skyline_is_first_play_host, True)
+    - skyline_console_yarn_build
+
 - name: Install the python venv
   import_role:
     name: "python_venv_build"

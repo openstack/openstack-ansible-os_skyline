@@ -20,3 +20,11 @@
       - openstack-ansible-deploy-aio_metal-jobs
       - publish-openstack-docs-pti
       - build-release-notes-jobs-python3
+    check:
+      jobs:
+        - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
+        - openstack-ansible-deploy-aio_skyline_yarn-rockylinux-9
+    gate:
+      jobs:
+        - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
+        - openstack-ansible-deploy-aio_skyline_yarn-rockylinux-9

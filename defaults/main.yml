@@ -20,6 +20,10 @@ skyline_venv_python_executable: "{{ openstack_venv_python_executable | default('
 # Set the package install state for distribution packages
 # Options are 'present' and 'latest'
 skyline_package_state: "{{ package_state | default('latest') }}"
+# Centos EPEL repository options
+skyline_yarn_epel_mirror: "{{ centos_epel_mirror | default('http://download.fedoraproject.org/pub/epel') }}"
+skyline_yarn_epel_key: >-
+  {{ centos_epel_key | default('http://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-' ~ ansible_facts['distribution_major_version']) }}
 
 # Set the host which will execute the shade modules
 # for the service setup. The host must already have
@@ -31,11 +35,26 @@ skyline_service_setup_host_python_interpreter: >-
        (skyline_service_setup_host == 'localhost') | ternary(ansible_playbook_python, ansible_facts['python']['executable']))
   }}
 
+# In order to get relevant skylinie-console content, you'd need to build static files
+# through yarn. Otherwise only tagged releases from PyPi can be used for
+# `skyline_console_git_install_branch`
+skyline_console_yarn_build: "{{ skyline_console_git_install_branch is not regex(skyline_console_pypi_version_regex) }}"
+# You can set this variable to true during runtime if need to explicitly re-build skyline-console
+skyline_console_yarn_rebuild: "{{ venv_wheels_rebuild | default(False) }}"
+skyline_console_yarn_build_path: /openstack/src/skyline-console
+# If wheel build is disabled and yarn build is enabled, we'd need to build on each skyline host independently
+skyline_console_yarn_setup_host: "{{ skyline_console_wheel_build_enable | ternary(groups['repo_all'][0], inventory_hostname) }}"
+skyline_console_wheel_build_enable: "{{ venv_wheel_build_enable | default(True) and groups['repo_all'] | length > 0 }}"
+
 skyline_git_repo: https://opendev.org/openstack/skyline-apiserver
 skyline_git_install_branch: master
 
 skyline_console_git_repo: https://opendev.org/openstack/skyline-console
 skyline_console_git_install_branch: master
+
+# We will not build yarn when version matches a regex for valid Python versions, then
+# it's assumed, that version in topic should be available from PyPi and build is not needed.
+skyline_console_pypi_version_regex: '^(\d*!)?(\d*)(\.(\d*))*((a|b|rc)(\d*))?(\.post(\d*))?(\.dev(\d*))?$'
 
 skyline_upper_constraints_url: >-
   {{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}
@@ -97,9 +116,18 @@ skyline_api_workers: >-
   {{ [[(ansible_facts['processor_vcpus'] // ansible_facts['processor_threads_per_core']) | default(1), 1] | max, skyline_api_workers_max] | min }}
 
 # Common pip packages
+# If yarn build is enabled, we need to install skyline-console from local path rather
+# then from git.
+# If yarn build is disabled, ``skyline_console_git_install_branch`` must be valid tag
+# on pypi.
 skyline_pip_packages:
   - "git+{{ skyline_git_repo }}@{{ skyline_git_install_branch }}#egg=skyline-apiserver"
-  - "git+{{ skyline_console_git_repo }}@{{ skyline_console_git_install_branch }}#egg=skyline-console"
+  - "{{
+      skyline_console_yarn_build | ternary(
+        skyline_console_yarn_build_path,
+        'skyline-console==' ~ skyline_console_git_install_branch
+      )
+    }}"
 
 ## Service Name-Group Mapping
 skyline_services:
