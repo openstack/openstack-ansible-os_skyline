@@ -61,7 +61,7 @@ openstack:
   - octavia_project_admin
   - octavia_project_member
   - octavia_project_reader
-  default_region: RegionOne
+  default_region: {{ skyline_service_region }}
   extension_mapping:
     floating-ip-port-forwarding: neutron_port_forwarding
     fwaas_v2: neutron_firewall
@@ -75,14 +75,12 @@ openstack:
   sso_enabled: false
   sso_protocols:
   - openid
-  system_admin_roles:
-  - admin
-  - system_admin
-  system_project: 'service'
-  system_project_domain: 'Default'
+  system_admin_roles: {{ skyline_role_names }}
+  system_project: {{ skyline_service_project_name }}
+  system_project_domain: {{ skyline_service_project_domain_id }}
   system_reader_roles:
-  - system_reader
-  system_user_domain: 'Default'
+  - reader
+  system_user_domain: {{ skyline_service_user_domain_id }}
   system_user_name: {{ skyline_service_user_name }}
   system_user_password: {{ skyline_service_password }}
 setting:

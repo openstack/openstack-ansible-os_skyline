@@ -97,11 +97,14 @@ skyline_system_user_home: "/var/lib/{{ skyline_system_user_name }}"
 ## Service user
 skyline_service_user_name: skyline
 # skyline_service_password:
+skyline_service_region: "{{ service_region | default('RegionOne') }}"
 skyline_service_project_name: service
 skyline_service_project_domain_id: default
 skyline_service_user_domain_id: default
 skyline_service_in_ldap: "{{ service_ldap_backend_enabled | default(False) }}"
-skyline_role_name: admin
+skyline_role_names:
+  - admin
+  - service
 
 # API
 skyline_bind_address: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
