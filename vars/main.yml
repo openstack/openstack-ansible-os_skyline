@@ -40,8 +40,10 @@ skyline_service_mapping:
   container: zun
   container-infra: magnum
   database: trove
+  dns: designate
   identity: keystone
   image: glance
+  instance-ha: masakari
   key-manager: barbican
   load-balancer: octavia
   network: neutron
