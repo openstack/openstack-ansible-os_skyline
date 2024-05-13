@@ -1,0 +1,39 @@
+Listen {{ skyline_bind_address }}:{{ skyline_service_port }}
+
+# Server configuration for Skyline console
+<VirtualHost {{ skyline_bind_address }}:{{ skyline_service_port }}>
+  DocumentRoot {{ skyline_lib_static_files }}
+
+  <Directory {{ skyline_lib_static_files }}>
+    <FilesMatch "\.(html|css|js|jpg|jpeg|png|gif|ico|svg|eot|otf|woff|woff2|ttf)$">
+      Header set Cache-Control "max-age=86400, public"
+    </FilesMatch>
+
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI} !^/index.html$
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !\.(html|css|js|jpg|jpeg|png|gif|ico|svg|eot|otf|woff|woff2|ttf)$ [NC]
+    RewriteRule . /index.html [L]
+
+    Require all granted
+  </Directory>
+
+  <Location /api/openstack/skyline/>
+    ProxyPass http://127.0.0.1:8443/
+    ProxyPassReverse Off
+  </Location>
+
+{% for endpoint in openstack_service_endpoints %}
+{%   set _region = endpoint["Region"] | lower %}
+{%   set _type = (endpoint["Service Type"] | lower) %}
+{%   set _url = endpoint["URL"] | urlsplit %}
+{%   if _type in skyline_service_mapping %}
+{%     set _service = skyline_service_mapping[_type] %}
+  <Location /api/openstack/{{ _region }}/{{ _service }}/>
+    ProxyPass {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/
+    ProxyPassReverse {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/
+  </Location>
+{%  endif %}
+{% endfor %}
+</VirtualHost>

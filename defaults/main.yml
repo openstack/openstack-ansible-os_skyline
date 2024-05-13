@@ -106,6 +106,7 @@ skyline_role_name: admin
 # API
 skyline_bind_address: "{{ openstack_service_bind_address | default('0.0.0.0') }}"
 skyline_service_port: 9999
+skyline_server_name: "{{ ansible_facts['fqdn'] | default('skyline') }}"
 # skyline_prometheus_basic_auth_password:
 skyline_prometheus_basic_auth_user: 'skyline'
 # skyline_secret_key:

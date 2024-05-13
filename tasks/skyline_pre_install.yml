@@ -47,6 +47,6 @@
       mode: "0700"
     - path: "{{ skyline_system_user_home }}"
     - path: "/var/log/skyline"
-    - path: "/etc/nginx/sites-available"
+    - path: "/etc/{{ skyline_system_service_name }}/sites-available"
       owner: root
       group: root

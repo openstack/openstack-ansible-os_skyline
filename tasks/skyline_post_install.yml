@@ -65,20 +65,5 @@
   set_fact:
     openstack_service_endpoints: "{{ _endpoint_list.stdout | from_yaml }}"
 
-- name: Create nginx config
-  template:
-    src: "nginx.conf.j2"
-    dest: "/etc/nginx/sites-available/skyline.conf"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  notify:
-    - Restart web server
-
-- name: Enable skyline site
-  file:
-    src: "/etc/nginx/sites-available/skyline.conf"
-    dest: "{{ skyline_nginx_vhost_enable_path }}/skyline.conf"
-    state: "link"
-  notify:
-    - Restart web server
+- name: Importing web server configuration tasks
+  import_tasks: skyline_apache.yml
