@@ -86,10 +86,12 @@
     _service_setup_host_python_interpreter: "{{ skyline_service_setup_host_python_interpreter }}"
     _service_project_name: "{{ skyline_service_project_name }}"
     _service_region: "{{ skyline_service_region }}"
+    _project_domain: "{{ skyline_service_project_domain_id }}"
     _service_users:
       - name: "{{ skyline_service_user_name }}"
         password: "{{ skyline_service_password }}"
         role: "{{ skyline_role_name }}"
+        domain: "{{ skyline_service_user_domain_id }}"
     _service_endpoints: []
   when: _skyline_is_first_play_host
   tags:
