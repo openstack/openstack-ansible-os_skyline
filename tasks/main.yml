@@ -65,6 +65,7 @@
   import_tasks: skyline_post_install.yml
   tags:
     - skyline-config
+    - post-install
 
 - name: Importing skyline_db_sync tasks
   import_tasks: skyline_db_sync.yml
