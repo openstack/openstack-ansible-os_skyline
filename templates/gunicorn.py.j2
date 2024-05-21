@@ -14,7 +14,7 @@
 
 import multiprocessing
 
-bind = "unix:/var/lib/skyline/skyline.sock"
+bind = "127.0.0.1:8443"
 workers = {{ skyline_api_workers }}
 worker_class = "uvicorn.workers.UvicornWorker"
 timeout = 3600

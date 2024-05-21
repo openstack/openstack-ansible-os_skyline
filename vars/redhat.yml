@@ -20,10 +20,21 @@ cache_timeout: 600
 # Common apt packages
 skyline_distro_packages:
   - git
-  - nginx
+  - httpd
 
-skyline_system_service_name: nginx
-skyline_nginx_vhost_enable_path: /etc/nginx/conf.d
+skyline_system_service_name: httpd
+skyline_vhost_enable_path: /etc/httpd/conf.d
+
+skyline_apache_default_sites:
+  - "/etc/httpd/conf.d/userdir.conf"
+  - "/etc/httpd/conf.d/welcome.conf"
+
+skyline_apache_configs:
+  - { src: "apache_ports.conf.j2", dest: "{{ skyline_vhost_enable_path }}/ports.conf", owner: "root", group: "root" }
+  - { src: "skyline.vhost.j2", dest: "/etc/{{ skyline_system_service_name }}/sites-available/skyline.conf", owner: "root", group: "root" }
+
+skyline_apache_conf: "/etc/httpd/conf/httpd.conf"
+skyline_apache_security_conf: "{{ skyline_apache_conf }}"
 
 skyline_devel_distro_packages: []
 
