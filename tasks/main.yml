@@ -91,7 +91,7 @@
     _service_users:
       - name: "{{ skyline_service_user_name }}"
         password: "{{ skyline_service_password }}"
-        role: "{{ skyline_role_name }}"
+        role: "{{ skyline_role_names }}"
         domain: "{{ skyline_service_user_domain_id }}"
     _service_endpoints: []
   when: _skyline_is_first_play_host
