@@ -22,6 +22,12 @@ Listen {{ skyline_bind_address }}:{{ skyline_service_port }}
   <Location /api/openstack/skyline/>
     ProxyPass http://127.0.0.1:8443/
     ProxyPassReverse Off
+    ProxyPreserveHost On
+  </Location>
+  <Location /api/v1/>
+    ProxyPass http://127.0.0.1:8443/
+    ProxyPassReverse Off
+    ProxyPreserveHost On
   </Location>
 
 {% for endpoint in openstack_service_endpoints %}
@@ -31,8 +37,9 @@ Listen {{ skyline_bind_address }}:{{ skyline_service_port }}
 {%   if _type in skyline_service_mapping %}
 {%     set _service = skyline_service_mapping[_type] %}
   <Location /api/openstack/{{ _region }}/{{ _service }}/>
-    ProxyPass {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/
+    ProxyPass {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/ flushpackets=on
     ProxyPassReverse {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/
+    ProxyPreserveHost On
   </Location>
 {%  endif %}
 {% endfor %}
