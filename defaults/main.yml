@@ -119,6 +119,9 @@ skyline_api_workers_max: 16
 skyline_api_workers: >-
   {{ [[(ansible_facts['processor_vcpus'] // ansible_facts['processor_threads_per_core']) | default(1), 1] | max, skyline_api_workers_max] | min }}
 
+#skyline SSO enable
+skyline_sso_enabled: False
+
 # Common pip packages
 # If yarn build is enabled, we need to install skyline-console from local path rather
 # then from git.
@@ -148,3 +151,4 @@ skyline_skyline_yaml_overrides: {}
 
 # Set override for image upload size
 skyline_client_max_body_size: 1100M
+
