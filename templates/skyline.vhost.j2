@@ -30,17 +30,21 @@ Listen {{ skyline_bind_address }}:{{ skyline_service_port }}
     ProxyPreserveHost On
   </Location>
 
+{% if haproxy_ssl_all_vips %}
+SSLProxyEngine On
+{% endif %}
+
 {% for endpoint in openstack_service_endpoints %}
 {%   set _region = endpoint["Region"] | lower %}
 {%   set _type = (endpoint["Service Type"] | lower) %}
 {%   set _url = endpoint["URL"] | urlsplit %}
 {%   if _type in skyline_service_mapping %}
 {%     set _service = skyline_service_mapping[_type] %}
-  <Location /api/openstack/{{ _region }}/{{ _service }}/>
-    ProxyPass {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/ flushpackets=on
-    ProxyPassReverse {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/
-    ProxyPreserveHost On
-  </Location>
+ProxyPass /api/openstack/{{ _region }}/{{ _service }} {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/ flushpackets=on
+ProxyPassReverse /api/openstack/{{ _region }}/{{ _service }} {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/
+ProxyPreserveHost On
+
+
 {%  endif %}
 {% endfor %}
 </VirtualHost>
