@@ -7,8 +7,8 @@ default:
   log_dir: /var/log/skyline
   prometheus_basic_auth_password: "{{ skyline_prometheus_basic_auth_password }}"
   prometheus_basic_auth_user: "{{ skyline_prometheus_basic_auth_user }}"
-  prometheus_enable_basic_auth: false
-  prometheus_endpoint: http://localhost:9091
+  prometheus_enable_basic_auth: "{{ skyline_prometheus_enable_basic_auth }}"
+  prometheus_endpoint: "{{ skyline_prometheus_endpoint | default('http://localhost:9091') }}"
   secret_key: {{ skyline_secret_key }}
   session_name: session
 developer:
