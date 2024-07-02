@@ -5,10 +5,10 @@ default:
   database_url: mysql://{{ skyline_galera_user }}:{{ skyline_galera_password }}@{{ skyline_galera_address }}/{{ skyline_galera_database }}?charset=utf8{% if skyline_galera_use_ssl | bool %}&ssl_verify_cert=true{% if skyline_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ skyline_galera_ssl_ca_cert }}{% endif %}{% endif +%}
   debug: {{ skyline_debug }}
   log_dir: /var/log/skyline
-  prometheus_basic_auth_password: "{{ skyline_prometheus_basic_auth_password }}"
-  prometheus_basic_auth_user: "{{ skyline_prometheus_basic_auth_user }}"
-  prometheus_enable_basic_auth: "{{ skyline_prometheus_enable_basic_auth }}"
-  prometheus_endpoint: "{{ skyline_prometheus_endpoint | default('http://localhost:9091') }}"
+  prometheus_basic_auth_password: {{ skyline_prometheus_basic_auth_password }}
+  prometheus_basic_auth_user: {{ skyline_prometheus_basic_auth_user }}
+  prometheus_enable_basic_auth: {{ skyline_prometheus_enable_basic_auth }}
+  prometheus_endpoint: {{ skyline_prometheus_endpoint | default('http://localhost:9091') }}
   secret_key: {{ skyline_secret_key }}
   session_name: session
 developer:
