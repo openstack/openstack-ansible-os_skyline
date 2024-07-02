@@ -68,7 +68,7 @@ openstack:
     qos: neutron_qos
     vpnaas: neutron_vpn
   interface_type: {{ skyline_interface }}
-  keystone_url: {{ keystone_service_internalurl }}
+  keystone_url: {{ skyline_keystone_url }}
   nginx_prefix: /api/openstack
   reclaim_instance_interval: 604800
   service_mapping: {{ skyline_service_mapping }}

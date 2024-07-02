@@ -114,6 +114,7 @@ skyline_server_name: "{{ ansible_facts['fqdn'] | default('skyline') }}"
 skyline_prometheus_basic_auth_user: 'skyline'
 skyline_prometheus_enable_basic_auth: false
 skyline_prometheus_endpoint: http://localhost:9091
+skyline_keystone_url: "{{ keystone_service_internalurl }}"
 # skyline_secret_key:
 skyline_interface: internal
 ## Cap the maximum number of threads / workers when a user value is unspecified.
