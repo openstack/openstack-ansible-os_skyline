@@ -73,9 +73,9 @@ openstack:
   reclaim_instance_interval: 604800
   service_mapping: {{ skyline_service_mapping }}
   sso_enabled: {{ skyline_sso_enabled }}
-  {% if skyline_sso_enabled %}
+{% if skyline_sso_enabled %}
   sso_region: {{ skyline_service_region }}
-  {% endif %}
+{% endif %}
   sso_protocols:
   - openid
   system_admin_roles: {{ skyline_role_names }}
