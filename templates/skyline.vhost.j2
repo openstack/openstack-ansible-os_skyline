@@ -4,6 +4,17 @@ Listen {{ skyline_bind_address }}:{{ skyline_service_port }}
 <VirtualHost {{ skyline_bind_address }}:{{ skyline_service_port }}>
   DocumentRoot {{ skyline_lib_static_files }}
 
+  {% if ('https' in _endpoint_list.stdout | from_yaml | map(attribute='URL') | map('urlsplit') | map(attribute='scheme')) -%}
+  SSLProxyEngine On
+  SSLProxyProtocol {{ skyline_ssl_protocol }}
+  {%   if skyline_ssl_cipher_suite_tls12 != "" -%}
+  SSLProxyCipherSuite {{ skyline_ssl_cipher_suite_tls12 }}
+  {%   endif -%}
+  {%   if skyline_ssl_cipher_suite_tls13 != "" -%}
+  SSLProxyCipherSuite TLSv1.3 {{ skyline_ssl_cipher_suite_tls13 }}
+  {%   endif -%}
+  {% endif %}
+
   <Directory {{ skyline_lib_static_files }}>
     <FilesMatch "\.(html|css|js|jpg|jpeg|png|gif|ico|svg|eot|otf|woff|woff2|ttf)$">
       Header set Cache-Control "max-age=86400, public"
