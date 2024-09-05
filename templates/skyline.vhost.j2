@@ -40,8 +40,8 @@ SSLProxyEngine On
 {%   set _url = endpoint["URL"] | urlsplit %}
 {%   if _type in skyline_service_mapping %}
 {%     set _service = skyline_service_mapping[_type] %}
-ProxyPass /api/openstack/{{ _region }}/{{ _service }} {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/ flushpackets=on
-ProxyPassReverse /api/openstack/{{ _region }}/{{ _service }} {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/
+ProxyPass /api/openstack/{{ _region }}/{{ _service }} {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/{% if _service == "swift" %}{{ _service }}{% endif %} flushpackets=on
+ProxyPassReverse /api/openstack/{{ _region }}/{{ _service }} {{ _url.scheme }}://{{ _url.hostname }}:{{ _url.port }}/{% if _service == "swift" %}{{ _service }}{% endif %} 
 ProxyPreserveHost On
 
 
