@@ -25,12 +25,16 @@ skyline_distro_packages:
 skyline_system_service_name: apache2
 skyline_vhost_enable_path: /etc/apache2/sites-enabled
 
+skyline_apache_mpms:
+  - name: "mpm_event"
+    state: "{{ (skyline_apache_mpm_backend == 'event') | ternary('present', 'absent') }}"
+  - name: "mpm_worker"
+    state: "{{ (skyline_apache_mpm_backend == 'worker') | ternary('present', 'absent') }}"
+  - name: "mpm_prefork"
+    state: "{{ (skyline_apache_mpm_backend == 'prefork') | ternary('present', 'absent') }}"
+
 skyline_apache_modules:
   - name: "ssl"
-    state: "present"
-  - name: "mpm_event"
-    state: "absent"
-  - name: "mpm_worker"
     state: "present"
   - name: "rewrite"
     state: "present"
