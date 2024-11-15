@@ -16,7 +16,7 @@
 _skyline_is_first_play_host: >-
   {{
     (skyline_services['skyline-api']['group'] in group_names and inventory_hostname == (
-      groups[skyline_services['skyline-api']['group']] | intersect(ansible_play_hosts)) | first) | bool
+      groups[skyline_services['skyline-api']['group']] | select('in', ansible_play_hosts)) | first) | bool
   }}
 
 skyline_package_list: |-
