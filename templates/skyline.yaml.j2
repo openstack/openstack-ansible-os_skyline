@@ -2,7 +2,7 @@ default:
   access_token_expire: 3600
   access_token_renew: 1800
   cors_allow_origins: []
-  database_url: mysql://{{ skyline_galera_user }}:{{ skyline_galera_password }}@{{ skyline_galera_address }}/{{ skyline_galera_database }}?charset=utf8{% if skyline_galera_use_ssl | bool %}&ssl_verify_cert=true{% if skyline_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ skyline_galera_ssl_ca_cert }}{% endif %}{% endif +%}
+  database_url: mysql://{{ skyline_galera_user }}:{{ skyline_galera_password }}@{{ skyline_galera_address }}/{{ skyline_galera_database }}?charset=utf8{% if skyline_galera_use_ssl | bool %}&ssl=true&ssl_verify_cert=true{% if skyline_galera_ssl_ca_cert | length > 0 %}&ssl_ca={{ skyline_galera_ssl_ca_cert }}{% endif %}{% endif +%}
   debug: {{ skyline_debug }}
   log_dir: /var/log/skyline
   prometheus_basic_auth_password: "{{ skyline_prometheus_basic_auth_password }}"
