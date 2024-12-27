@@ -13,73 +13,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- name: Ensure apache2 MPM for Debian/Ubuntu
-  apache2_module:
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
-    ignore_configcheck: yes
-    warn_mpm_absent: false
-  with_items: "{{ skyline_apache_mpms | sort(attribute='state') }}"
-  when:
-    - ansible_facts['pkg_mgr'] == 'apt'
-  notify: Restart web server
-
-- name: Ensure apache2 MPM for EL
-  copy:
-    content: |
-      LoadModule mpm_{{ skyline_apache_mpm_backend }}_module modules/mod_mpm_{{ skyline_apache_mpm_backend }}.so
-
-    dest: /etc/httpd/conf.modules.d/00-mpm.conf
-    mode: "0644"
-  when:
-    - ansible_facts['pkg_mgr'] == 'dnf'
-  notify: Restart web server
-
-- name: Enable apache2 modules
-  apache2_module:
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
-    ignore_configcheck: yes
-  with_items:
-    - "{{ skyline_apache_modules }}"
-  when:
-    - ansible_facts['pkg_mgr'] == 'apt'
-  notify: Restart web server
-
-- name: Disable default apache site
-  file:
-    path: "{{ item }}"
-    state: "absent"
-  with_items: "{{ skyline_apache_default_sites }}"
-  notify: Restart web server
-
-- name: Ensure Apache ServerName
-  lineinfile:
-    dest: "{{ skyline_apache_conf }}"
-    line: "ServerName {{ skyline_server_name }}"
-  notify: Restart web server
-
-- name: Create Apache config
-  template:
-    src: "{{ item['src'] }}"
-    dest: "{{ item['dest'] }}"
-    owner: "{{ item['owner'] }}"
-    group: "{{ item['group'] }}"
-    mode: "0644"
-  with_items: "{{ skyline_apache_configs }}"
-  notify: Restart web server
-
-- name: Enable skyline site
-  file:
-    src: "/etc/{{ skyline_system_service_name }}/sites-available/skyline.conf"
-    dest: "{{ skyline_vhost_enable_path }}/skyline.conf"
-    state: "link"
-  notify: Restart web server
-
-- name: Remove Listen from Apache config
-  lineinfile:
-    dest: "{{ skyline_apache_security_conf }}"
-    regexp: '^(Listen.*)'
-    backrefs: yes
-    line: '#\1'
-  notify: Restart web server
+- name: Including HTTPD role
+  ansible.builtin.import_role:
+    name: httpd
+  vars:
+    httpd_extra_modules:
+      - name: "proxy_http"
+        state: "present"
+    httpd_vhosts:
+      - name: skyline
+        address: "{{ skyline_bind_address }}"
+        port: "{{ skyline_service_port }}"
+        document_root: "{{ skyline_lib_static_files }}"
+        server_name: "{{ skyline_server_name }}"
+        directories:
+          - path: "{{ skyline_lib_static_files }}"
+            options:
+              - '<FilesMatch "\.(html|css|js|jpg|jpeg|png|gif|ico|svg|eot|otf|woff|woff2|ttf)$">'
+              - '  Header set Cache-Control "max-age=86400, public"'
+              - '</FilesMatch>'
+              - RewriteEngine On
+              - RewriteCond %{REQUEST_URI} !^/index.html$
+              - RewriteCond %{REQUEST_FILENAME} !-f
+              - RewriteCond %{REQUEST_FILENAME} !-d
+              - RewriteCond %{REQUEST_URI} !\.(html|css|js|jpg|jpeg|png|gif|ico|svg|eot|otf|woff|woff2|ttf)$ [NC]
+              - RewriteRule . /index.html [L]
+              - Require all granted
+        locations: "{{ _skyline_default_locations + _skyline_service_locations }}"
+        options: >-
+          {{
+            ('https' in _endpoint_list.stdout | from_yaml | map(attribute='URL') | map('urlsplit') | map(attribute='scheme')) | ternary(
+              _skyline_proxy_ssl_options | select(), []
+            )
+          }}

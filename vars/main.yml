@@ -19,9 +19,7 @@ _skyline_is_first_play_host: >-
       groups[skyline_services['skyline-api']['group']] | select('in', ansible_play_hosts)) | first) | bool
   }}
 
-skyline_package_list: |-
-  {% set packages = skyline_distro_packages %}
-  {{ packages }}
+skyline_package_list: "{{ skyline_distro_packages }}"
 
 # Compile a list of the services on a host based on whether
 # the host is in the host group and the service is enabled.
@@ -52,3 +50,42 @@ skyline_service_mapping:
   placement: placement
   sharev2: manilav2
   volumev3: cinder
+
+_skyline_default_locations:
+  - path: /api/openstack/skyline/
+    options:
+      - ProxyPass http://127.0.0.1:8443/
+      - ProxyPassReverse Off
+      - ProxyPreserveHost On
+  - path: /api/v1/
+    options:
+      - ProxyPass http://127.0.0.1:8443/
+      - ProxyPassReverse Off
+      - ProxyPreserveHost On
+
+_skyline_service_locations: |-
+  {% set locations = [] %}
+  {% for endpoint in openstack_service_endpoints %}
+  {%   set _region = endpoint["Region"] | lower %}
+  {%   set _type = (endpoint["Service Type"] | lower) %}
+  {%   set _url = endpoint["URL"] | urlsplit %}
+  {%   if _type in skyline_service_mapping %}
+  {%     set _service = skyline_service_mapping[_type] %}
+  {%     set _ = locations.append({
+           'path': '/api/openstack/' ~ _region ~ '/' ~ _service ~ '/',
+           'options': [
+             'ProxyPass ' ~ _url.scheme ~ '://' ~ _url.hostname ~ ':' ~ _url.port ~ '/ flushpackets=on',
+             'ProxyPassReverse ' ~ _url.scheme ~ '://' ~ _url.hostname ~ ':' ~ _url.port ~ '/',
+             'ProxyPreserveHost On'
+           ]
+         })
+  %}
+  {%   endif %}
+  {% endfor %}
+  {{ locations }}
+
+_skyline_proxy_ssl_options:
+  - "SSLProxyEngine On"
+  - "SSLProxyProtocol {{ skyline_ssl_protocol }}"
+  - "{{ skyline_ssl_cipher_suite_tls12 | ternary('SSLProxyCipherSuite '  ~ skyline_ssl_cipher_suite_tls12, '') }}"
+  - "{{ skyline_ssl_cipher_suite_tls13 | ternary('SSLProxyCipherSuite TLSv1.3 ' ~ skyline_ssl_cipher_suite_tls13, '') }}"
