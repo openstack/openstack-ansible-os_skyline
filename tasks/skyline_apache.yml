@@ -17,6 +17,12 @@
   ansible.builtin.import_role:
     name: httpd
   vars:
+    httpd_pki_dir: "{{ skyline_pki_dir }}"
+    httpd_pki_setup_host: "{{ skyline_pki_setup_host }}"
+    httpd_ssl_protocol: "{{ skyline_ssl_protocol }}"
+    httpd_ssl_cipher_suite_tls12: "{{ skyline_ssl_cipher_suite_tls12 }}"
+    httpd_ssl_cipher_suite_tls13: "{{ skyline_ssl_cipher_suite_tls13 }}"
+    httpd_pki_regen_cert: "{{ skyline_pki_regen_cert }}"
     httpd_extra_modules:
       - name: "proxy_http"
         state: "present"
@@ -46,3 +52,4 @@
               _skyline_proxy_ssl_options | select(), []
             )
           }}
+        ssl: "{{ skyline_backend_ssl | ternary(_skyline_httpd_vhost_ssl, false) }}"
