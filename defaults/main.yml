@@ -88,6 +88,9 @@ skyline_db_pool_timeout: "{{ openstack_db_pool_timeout | default('30') }}"
 skyline_db_connection_recycle_time: "{{ openstack_db_connection_recycle_time | default('600') }}"
 
 ## TLS configuration
+skyline_backend_ssl: "{{ openstack_service_backend_ssl | default(False) }}"
+skyline_pki_dir: "{{ openstack_pki_dir | default('/etc/openstack_deploy/pki') }}"
+skyline_pki_setup_host: "{{ openstack_pki_setup_host | default('localhost') }}"
 skyline_ssl_protocol: "{{ ssl_protocol | default('ALL -SSLv2 -SSLv3 -TLSv1 -TLSv1.1') }}"
 # TLS v1.2 and below
 skyline_ssl_cipher_suite_tls12: >-
@@ -95,6 +98,11 @@ skyline_ssl_cipher_suite_tls12: >-
 # TLS v1.3
 skyline_ssl_cipher_suite_tls13: >-
   {{ ssl_cipher_suite_tls13 | default('TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256') }}
+skyline_pki_regen_cert: ''
+skyline_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
+# skyline_user_ssl_cert: <path to cert on ansible deployment host>
+# skyline_user_ssl_key: <path to cert on ansible deployment host>
+# skyline_user_ssl_ca_cert: <path to cert on ansible deployment host>
 
 ## System User / Group
 skyline_system_user_name: skyline

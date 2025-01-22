@@ -89,3 +89,15 @@ _skyline_proxy_ssl_options:
   - "SSLProxyProtocol {{ skyline_ssl_protocol }}"
   - "{{ skyline_ssl_cipher_suite_tls12 | ternary('SSLProxyCipherSuite '  ~ skyline_ssl_cipher_suite_tls12, '') }}"
   - "{{ skyline_ssl_cipher_suite_tls13 | ternary('SSLProxyCipherSuite TLSv1.3 ' ~ skyline_ssl_cipher_suite_tls13, '') }}"
+
+_skyline_httpd_vhost_ssl: |-
+  {% set ssl_options = {} %}
+  {% if (skyline_user_ssl_cert is defined and skyline_user_ssl_cert) and (skyline_user_ssl_key is defined and skyline_user_ssl_key) %}
+  {%   set _ = ssl_options.update({'cert': skyline_user_ssl_cert, 'key': skyline_user_ssl_key}) %}
+  {%   if skyline_user_ssl_ca_cert is defined and skyline_user_ssl_ca_cert %}
+  {%     set _ = ssl_options.update({'ca': skyline_user_ssl_ca_cert}) %}
+  {%   endif %}
+  {% else %}
+  {%   set _ = ssl_options.update({'san': skyline_pki_san}) %}
+  {% endif %}
+  {{ ssl_options }}
