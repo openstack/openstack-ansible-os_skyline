@@ -142,9 +142,6 @@ skyline_pip_packages:
       )
     }}"
 
-## Apache configuration
-skyline_apache_mpm_backend: "{{ openstack_apache_mpm_backend | default('event') }}"
-
 ## Service Name-Group Mapping
 skyline_services:
   skyline-api:
