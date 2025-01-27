@@ -32,6 +32,7 @@ Listen {{ skyline_bind_address }}:{{ skyline_service_port }}
 
 {% if haproxy_ssl_all_vips %}
 SSLProxyEngine On
+SSLProxyCheckPeerName Off
 {% endif %}
 
 {% for endpoint in openstack_service_endpoints %}
