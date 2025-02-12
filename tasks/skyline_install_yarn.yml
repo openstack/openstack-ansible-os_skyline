@@ -38,8 +38,8 @@
         name: epel-yarn
         baseurl: "{{ skyline_yarn_epel_mirror ~ '/' ~ ansible_facts['distribution_major_version'] ~ '/Everything/' ~ ansible_facts['architecture'] }}"
         description: "NodeJS Packages for Enterprise Linux {{ ansible_facts['distribution_major_version'] }} - $basearch"
-        gpgcheck: yes
-        enabled: yes
+        gpgcheck: true
+        enabled: true
         state: present
         includepkgs: "yarnpkg"
       register: install_epel_repo
@@ -54,7 +54,7 @@
     version: "{{ skyline_console_git_install_branch }}"
     dest: "{{ skyline_console_yarn_build_path }}"
     force: true
-  changed_when: False
+  changed_when: false
 
 - name: Detect if rebuild is needed
   delegate_to: "{{ skyline_console_yarn_setup_host }}"

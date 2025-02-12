@@ -1,3 +1,4 @@
+---
 # Copyright 2022, BBC R&D
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -54,7 +55,7 @@ skyline_console_git_install_branch: master
 
 # We will not build yarn when version matches a regex for valid Python versions, then
 # it's assumed, that version in topic should be available from PyPi and build is not needed.
-skyline_console_pypi_version_regex: '^(\d*!)?(\d*)(\.(\d*))*((a|b|rc)(\d*))?(\.post(\d*))?(\.dev(\d*))?$'
+skyline_console_pypi_version_regex: "^(\\d*!)?(\\d*)(\\.(\\d*))*((a|b|rc)(\\d*))?(\\.post(\\d*))?(\\.dev(\\d*))?$"
 
 skyline_upper_constraints_url: >-
   {{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}
@@ -98,7 +99,7 @@ skyline_ssl_cipher_suite_tls12: >-
 # TLS v1.3
 skyline_ssl_cipher_suite_tls13: >-
   {{ ssl_cipher_suite_tls13 | default('TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256') }}
-skyline_pki_regen_cert: ''
+skyline_pki_regen_cert: ""
 skyline_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
 # skyline_user_ssl_cert: <path to cert on ansible deployment host>
 # skyline_user_ssl_key: <path to cert on ansible deployment host>
@@ -128,7 +129,7 @@ skyline_bind_address: "{{ openstack_service_bind_address | default('0.0.0.0') }}
 skyline_service_port: 9999
 skyline_server_name: "{{ ansible_facts['fqdn'] | default('skyline') }}"
 # skyline_prometheus_basic_auth_password:
-skyline_prometheus_basic_auth_user: 'skyline'
+skyline_prometheus_basic_auth_user: "skyline"
 # skyline_secret_key:
 skyline_interface: internal
 ## Cap the maximum number of threads / workers when a user value is unspecified.

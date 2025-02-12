@@ -37,7 +37,7 @@
             options:
               - '<FilesMatch "\.(html|css|js|jpg|jpeg|png|gif|ico|svg|eot|otf|woff|woff2|ttf)$">'
               - '  Header set Cache-Control "max-age=86400, public"'
-              - '</FilesMatch>'
+              - </FilesMatch>
               - RewriteEngine On
               - RewriteCond %{REQUEST_URI} !^/index.html$
               - RewriteCond %{REQUEST_FILENAME} !-f

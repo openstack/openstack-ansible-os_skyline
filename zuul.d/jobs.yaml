@@ -1,5 +1,4 @@
 ---
-
 - job:
     name: openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
     parent: openstack-ansible-deploy-aio
