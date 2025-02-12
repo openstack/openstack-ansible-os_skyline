@@ -17,17 +17,17 @@
   when: skyline_lib_dir is not defined
   block:
     - name: Find the venv's python version
-      command: >-
+      ansible.builtin.command: >-
         {{ skyline_bin }}/{{ skyline_venv_python_executable }} -c 'import skyline_apiserver; print(skyline_apiserver.__file__)'
       changed_when: false
       register: _skyline_python_venv_details
 
     - name: Set python lib dir fact
-      set_fact:
+      ansible.builtin.set_fact:
         skyline_lib_dir: "{{ _skyline_python_venv_details.stdout | dirname | dirname }}"
 
 - name: Create gunicorn config
-  template:
+  ansible.builtin.template:
     src: "gunicorn.py.j2"
     dest: "/etc/skyline/gunicorn.py"
     owner: "root"
@@ -54,7 +54,7 @@
     - Restart skyline services
 
 - name: Get OpenStack endpoints
-  command: >-
+  ansible.builtin.command: >-
     openstack --os-cloud default endpoint list --format yaml --interface {{ skyline_interface }}
   delegate_to: "{{ skyline_service_setup_host }}"
   register: _endpoint_list
@@ -62,8 +62,8 @@
   changed_when: false
 
 - name: Set endpoint fact
-  set_fact:
+  ansible.builtin.set_fact:
     openstack_service_endpoints: "{{ _endpoint_list.stdout | from_yaml }}"
 
 - name: Importing web server configuration tasks
-  import_tasks: skyline_apache.yml
+  ansible.builtin.import_tasks: skyline_apache.yml

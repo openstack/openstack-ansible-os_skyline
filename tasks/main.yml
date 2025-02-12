@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Gather variables for each operating system
-  include_vars: "{{ lookup('first_found', params) }}"
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
   vars:
     params:
       files:
@@ -30,7 +30,7 @@
     - always
 
 - name: Including osa.db_setup role
-  include_role:
+  ansible.builtin.include_role:
     name: openstack.osa.db_setup
     apply:
       tags:
@@ -52,29 +52,29 @@
     - always
 
 - name: Importing skyline_pre_install tasks
-  import_tasks: skyline_pre_install.yml
+  ansible.builtin.import_tasks: skyline_pre_install.yml
   tags:
     - skyline-install
 
 - name: Importing skyline_install tasks
-  import_tasks: skyline_install.yml
+  ansible.builtin.import_tasks: skyline_install.yml
   tags:
     - skyline-install
 
 - name: Importing skyline_post_install tasks
-  import_tasks: skyline_post_install.yml
+  ansible.builtin.import_tasks: skyline_post_install.yml
   tags:
     - skyline-config
     - post-install
 
 - name: Importing skyline_db_sync tasks
-  import_tasks: skyline_db_sync.yml
+  ansible.builtin.import_tasks: skyline_db_sync.yml
   when: _skyline_is_first_play_host
   tags:
     - skyline-config
 
 - name: Including openstack.osa.service_setup role
-  include_role:
+  ansible.builtin.include_role:
     name: openstack.osa.service_setup
     apply:
       tags:
@@ -99,4 +99,4 @@
     - always
 
 - name: Flush handlers
-  meta: flush_handlers
+  ansible.builtin.meta: flush_handlers

@@ -14,14 +14,14 @@
 # limitations under the License.
 
 - name: Create the system group
-  group:
+  ansible.builtin.group:
     name: "{{ skyline_system_group_name }}"
     gid: "{{ skyline_system_group_gid | default(omit) }}"
     state: "present"
     system: "yes"
 
 - name: Create the skyline system user
-  user:
+  ansible.builtin.user:
     name: "{{ skyline_system_user_name }}"
     uid: "{{ skyline_system_user_uid | default(omit) }}"
     group: "{{ skyline_system_group_name }}"
@@ -32,7 +32,7 @@
     home: "{{ skyline_system_user_home }}"
 
 - name: Create skyline dir
-  file:
+  ansible.builtin.file:
     path: "{{ item.path }}"
     state: directory
     owner: "{{ item.owner | default(skyline_system_user_name) }}"

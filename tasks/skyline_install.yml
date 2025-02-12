@@ -14,7 +14,7 @@
 # limitations under the License.
 
 - name: Install distro packages
-  package:
+  ansible.builtin.package:
     name: "{{ skyline_package_list }}"
     state: "{{ skyline_package_state }}"
     update_cache: "{{ (ansible_facts['pkg_mgr'] == 'apt') | ternary('yes', omit) }}"
@@ -25,14 +25,14 @@
   delay: 2
 
 - name: Build skyline-console with yarn
-  include_tasks:
+  ansible.builtin.include_tasks:
     file: skyline_install_yarn.yml
   when:
     - skyline_console_wheel_build_enable | ternary(_skyline_is_first_play_host, True)
     - skyline_console_yarn_build
 
 - name: Install the python venv
-  import_role:
+  ansible.builtin.import_role:
     name: "python_venv_build"
   vars:
     venv_python_executable: "{{ skyline_venv_python_executable }}"
@@ -52,7 +52,7 @@
         value: "{{ skyline_venv_tag }}"
 
 - name: Run the systemd service role
-  include_role:
+  ansible.builtin.include_role:
     name: systemd_service
   vars:
     systemd_user_name: "{{ skyline_system_user_name }}"
