@@ -1,17 +1,8 @@
-========================
-Team and repository tags
-========================
-
-.. image:: https://governance.openstack.org/tc/badges/openstack-ansible-os_skyline.svg
-    :target: https://governance.openstack.org/tc/reference/tags/index.html
-
-.. Change things from this point on
-
 =========================
 OpenStack-Ansible Skyline
 =========================
 
-This Ansible role installs and configures OpenStack skyline
+This Ansible role installs and configures OpenStack Skyline.
 
 Documentation for the project can be found at:
   https://docs.openstack.org/openstack-ansible-os_skyline/latest/

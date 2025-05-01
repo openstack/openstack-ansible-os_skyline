@@ -1,11 +1,9 @@
 ==============================
-OpenStack-Ansible skyline role
+OpenStack-Ansible Skyline role
 ==============================
 
 .. toctree::
    :maxdepth: 2
-
-
 
 Default variables
 ~~~~~~~~~~~~~~~~~
@@ -23,4 +21,3 @@ Example playbook
 
 .. literalinclude:: ../../examples/playbook.yml
    :language: yaml
-
