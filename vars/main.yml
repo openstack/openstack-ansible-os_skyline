@@ -49,7 +49,7 @@ skyline_service_mapping:
   orchestration: heat
   placement: placement
   sharev2: manilav2
-  volumev3: cinder
+  block-storage: cinder
 
 _skyline_default_locations:
   - path: /api/openstack/skyline/
