@@ -86,6 +86,7 @@ _skyline_service_locations: |-
 
 _skyline_proxy_ssl_options:
   - "SSLProxyEngine On"
+  - "SSLProxyCheckPeerName off"
   - "SSLProxyProtocol {{ skyline_ssl_protocol }}"
   - "{{ skyline_ssl_cipher_suite_tls12 | ternary('SSLProxyCipherSuite '  ~ skyline_ssl_cipher_suite_tls12, '') }}"
   - "{{ skyline_ssl_cipher_suite_tls13 | ternary('SSLProxyCipherSuite TLSv1.3 ' ~ skyline_ssl_cipher_suite_tls13, '') }}"
