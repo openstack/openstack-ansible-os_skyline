@@ -1,10 +1,10 @@
 ---
 - job:
-    name: openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
+    name: openstack-ansible-deploy-aio_skyline_yarn-ubuntu-noble
     parent: openstack-ansible-deploy-aio
-    nodeset: ubuntu-jammy
+    nodeset: ubuntu-noble
 
 - job:
-    name: openstack-ansible-deploy-aio_skyline_yarn-rockylinux-9
+    name: openstack-ansible-deploy-aio_skyline_yarn-centos-10-stream
     parent: openstack-ansible-deploy-aio
-    nodeset: rockylinux-9
+    nodeset: osa-centos-10-stream

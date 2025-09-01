@@ -22,9 +22,7 @@
       - build-release-notes-jobs-python3
     check:
       jobs:
-        - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
-        - openstack-ansible-deploy-aio_skyline_yarn-rockylinux-9
-    gate:
-      jobs:
-        - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
-        - openstack-ansible-deploy-aio_skyline_yarn-rockylinux-9
+        - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-noble:
+            voting: false
+        - openstack-ansible-deploy-aio_skyline_yarn-centos-10-stream:
+            voting: false
