@@ -59,8 +59,8 @@ skyline_console_pypi_version_regex: "^(\\d*!)?(\\d*)(\\.(\\d*))*((a|b|rc)(\\d*))
 
 skyline_upper_constraints_url: >-
   {{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}
-skyline_git_constraints: []
-#  - "--constraint {{ skyline_upper_constraints_url }}"
+skyline_git_constraints:
+  - "--constraint {{ skyline_upper_constraints_url }}"
 
 skyline_pip_install_args: "{{ pip_install_options | default('') }}"
 
