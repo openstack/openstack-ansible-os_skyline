@@ -44,8 +44,9 @@ skyline_console_yarn_build: "{{ skyline_console_git_install_branch is not regex(
 skyline_console_yarn_rebuild: "{{ venv_wheels_rebuild | default(False) }}"
 skyline_console_yarn_build_path: /openstack/src/skyline-console
 # If wheel build is disabled and yarn build is enabled, we'd need to build on each skyline host independently
-skyline_console_yarn_setup_host: "{{ skyline_console_wheel_build_enable | ternary(groups['repo_all'][0], inventory_hostname) }}"
-skyline_console_wheel_build_enable: "{{ venv_wheel_build_enable | default(True) and groups['repo_all'] | length > 0 }}"
+skyline_console_yarn_build_group_name: repo_all
+skyline_console_yarn_setup_host: "{{ skyline_console_wheel_build_enable | ternary(groups[skyline_console_yarn_build_group_name] | last, inventory_hostname) }}"
+skyline_console_wheel_build_enable: "{{ skyline_console_yarn_build | bool and groups[skyline_console_yarn_build_group_name] | length > 0 }}"
 
 skyline_git_repo: https://opendev.org/openstack/skyline-apiserver
 skyline_git_install_branch: master
@@ -146,7 +147,10 @@ skyline_pip_packages:
   - "git+{{ skyline_git_repo }}@{{ skyline_git_install_branch }}#egg=skyline-apiserver"
   - "{{
       skyline_console_yarn_build | ternary(
-        skyline_console_yarn_build_path,
+        (skyline_console_yarn_setup_host == inventory_hostname) | ternary(
+          skyline_console_yarn_build_path,
+          'skyline-console@file://' ~ skyline_console_yarn_build_path
+        ),
         'skyline-console==' ~ skyline_console_git_install_branch
       )
     }}"

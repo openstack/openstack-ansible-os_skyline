@@ -36,13 +36,14 @@
     name: "python_venv_build"
   vars:
     venv_python_executable: "{{ skyline_venv_python_executable }}"
+    venv_build_host: "{{ skyline_console_yarn_setup_host }}"
     venv_build_constraints: "{{ skyline_git_constraints }}"
     venv_build_distro_package_list: "{{ skyline_devel_distro_packages }}"
     venv_install_destination_path: "{{ skyline_bin | dirname }}"
     venv_install_distro_package_list: "{{ skyline_distro_packages }}"
     venv_pip_install_args: "{{ skyline_pip_install_args }}"
     venv_pip_packages: "{{ skyline_pip_packages }}"
-    venv_wheel_build_enable: false
+    venv_wheel_build_enable: "{{ skyline_console_wheel_build_enable }}"
     venv_facts_when_changed:
       - section: "skyline"
         option: "need_service_restart"
