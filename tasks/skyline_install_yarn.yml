@@ -127,4 +127,8 @@
       ansible.builtin.command: "{{ skyline_yarn_binary }} run build"
       args:
         chdir: "{{ skyline_console_yarn_build_path }}"
+      register: build_yarn
+      until: build_yarn is success
+      retries: 3
+      delay: 5
       changed_when: false

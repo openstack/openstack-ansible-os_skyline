@@ -22,6 +22,7 @@ skyline_distro_packages:
 skyline_devel_distro_packages: []
 
 skyline_yarn_packages:
+  - python3-pip
   - yarnpkg
 
 skyline_yarn_binary: yarnpkg
