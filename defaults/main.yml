@@ -101,10 +101,10 @@ skyline_ssl_cipher_suite_tls12: >-
 skyline_ssl_cipher_suite_tls13: >-
   {{ ssl_cipher_suite_tls13 | default('TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256') }}
 skyline_pki_regen_cert: ""
-skyline_pki_san: "{{ openstack_pki_san | default('DNS:' ~ ansible_facts['hostname'] ~ ',IP:' ~ management_address) }}"
-# skyline_user_ssl_cert: <path to cert on ansible deployment host>
-# skyline_user_ssl_key: <path to cert on ansible deployment host>
-# skyline_user_ssl_ca_cert: <path to cert on ansible deployment host>
+skyline_pki_san: "{{ openstack_pki_san | default({'dns': [ansible_facts['hostname']], 'ip': [management_address]}) }}"
+skyline_user_ssl_cert: ""
+skyline_user_ssl_key: ""
+skyline_user_ssl_ca_cert: ""
 
 ## System User / Group
 skyline_system_user_name: skyline
