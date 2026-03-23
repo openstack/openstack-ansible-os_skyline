@@ -24,7 +24,11 @@
       jobs:
         - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
         - openstack-ansible-deploy-aio_skyline_yarn-rockylinux-9
+        - openstack-ansible-upgrade_2024.1-aio_metal-rockylinux-9:
+            voting: false
     gate:
       jobs:
         - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-jammy
         - openstack-ansible-deploy-aio_skyline_yarn-rockylinux-9
+        - openstack-ansible-upgrade_2024.1-aio_metal-rockylinux-9:
+            voting: false
