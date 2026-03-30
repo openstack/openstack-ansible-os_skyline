@@ -69,13 +69,18 @@ _skyline_service_locations: |-
   {%   set _region = endpoint["Region"] | lower %}
   {%   set _type = (endpoint["Service Type"] | lower) %}
   {%   set _url = endpoint["URL"] | urlsplit %}
+  {%   if _type == 'object-store' and endpoint["Service Name"] | lower == 'radosgw' %}
+  {%     set _ = _url.update({'rewrite_path': '/swift/'}) %}
+  {%   else %}
+  {%     set _ = _url.update({'rewrite_path': '/'})  %}
+  {%   endif %}
   {%   if _type in skyline_service_mapping %}
   {%     set _service = skyline_service_mapping[_type] %}
   {%     set _ = locations.append({
            'path': '/api/openstack/' ~ _region ~ '/' ~ _service ~ '/',
            'options': [
-             'ProxyPass ' ~ _url.scheme ~ '://' ~ _url.hostname ~ ':' ~ _url.port ~ '/ flushpackets=on',
-             'ProxyPassReverse ' ~ _url.scheme ~ '://' ~ _url.hostname ~ ':' ~ _url.port ~ '/',
+             'ProxyPass ' ~ _url.scheme ~ '://' ~ _url.hostname ~ ':' ~ _url.port ~ _url.rewrite_path ~ ' flushpackets=on',
+             'ProxyPassReverse ' ~ _url.scheme ~ '://' ~ _url.hostname ~ ':' ~ _url.port ~ _url.rewrite_path,
              'ProxyPreserveHost On'
            ]
          })
