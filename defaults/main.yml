@@ -168,5 +168,13 @@ skyline_services:
 skyline_apiserver_init_overrides: {}
 skyline_skyline_yaml_overrides: {}
 
+# Enable SSO login (OIDC/WebSSO) support in Skyline.
+# This only toggles Skyline's sso_* settings. Keystone federation
+# (IdP, protocol, mapping) must be configured separately.
+# Protocols advertised by Skyline GET /sso (must exist in Keystone).
+# skyline_sso_protocols:
+#   - openid
+skyline_sso_protocols: []
+
 # Set override for image upload size
 skyline_client_max_body_size: 1100M

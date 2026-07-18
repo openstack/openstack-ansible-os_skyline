@@ -67,9 +67,9 @@ openstack:
   nginx_prefix: /api/openstack
   reclaim_instance_interval: 604800
   service_mapping: {{ skyline_service_mapping }}
-  sso_enabled: false
-  sso_protocols:
-  - openid
+  sso_enabled: {{ skyline_sso_protocols | length > 0 }}
+  sso_protocols: {{ skyline_sso_protocols }}
+  sso_region: {{ skyline_service_region }}
   system_admin_roles: {{ skyline_role_names }}
   system_project: {{ skyline_service_project_name }}
   system_project_domain: {{ skyline_service_project_domain_id }}

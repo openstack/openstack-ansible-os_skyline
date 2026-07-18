@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    Added ``skyline_sso_protocols`` to control Skyline SSO settings in
+    ``skyline.yaml``. SSO remains disabled by default.
+
+    This option only configures Skyline (``sso_enabled``, ``sso_protocols``,
+    and ``sso_region``). Keystone federation must still be set up separately.
+    When SSO is enabled, Skyline's ``keystone_url`` must be browser-reachable,
+    and the callback ``{skyline_public}/api/openstack/skyline/api/v1/websso``
+    must be allowed as a trusted WebSSO origin/dashboard.
