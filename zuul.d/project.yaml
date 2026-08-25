@@ -23,4 +23,3 @@
     check:
       jobs:
         - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-noble
-        - openstack-ansible-deploy-aio_skyline_yarn-centos-10-stream
