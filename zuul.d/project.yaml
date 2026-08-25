@@ -24,5 +24,3 @@
       jobs:
         - openstack-ansible-deploy-aio_skyline_yarn-ubuntu-noble:
             voting: false
-        - openstack-ansible-deploy-aio_skyline_yarn-centos-10-stream:
-            voting: false
