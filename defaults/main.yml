@@ -144,7 +144,7 @@ skyline_api_workers: >-
 # If yarn build is disabled, ``skyline_console_git_install_branch`` must be valid tag
 # on pypi.
 skyline_pip_packages:
-  - "git+{{ skyline_git_repo }}@{{ skyline_git_install_branch }}#egg=skyline-apiserver"
+  - "skyline-apiserver@git+{{ skyline_git_repo }}@{{ skyline_git_install_branch }}"
   - "{{
       skyline_console_yarn_build | ternary(
         (skyline_console_yarn_setup_host == inventory_hostname) | ternary(
