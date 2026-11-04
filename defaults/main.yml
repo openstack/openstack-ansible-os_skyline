@@ -22,9 +22,9 @@ skyline_venv_python_executable: "{{ openstack_venv_python_executable | default('
 # Options are 'present' and 'latest'
 skyline_package_state: "{{ package_state | default('latest') }}"
 # Centos EPEL repository options
-skyline_yarn_epel_mirror: "{{ centos_epel_mirror | default('http://download.fedoraproject.org/pub/epel') }}"
+skyline_yarn_epel_mirror: "{{ centos_epel_mirror | default('https://dl.fedoraproject.org/pub/epel') }}"
 skyline_yarn_epel_key: >-
-  {{ centos_epel_key | default('http://download.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-' ~ ansible_facts['distribution_major_version']) }}
+  {{ centos_epel_key | default('https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-' ~ ansible_facts['distribution_major_version']) }}
 
 # Set the host which will execute the shade modules
 # for the service setup. The host must already have
